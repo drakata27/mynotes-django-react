@@ -1,45 +1,32 @@
-// import React, {useState, useEffect} from 'react'
-// import { useParams } from 'react-router-dom';
-
-// const NotePage = () => {
-//     let id  = useParams() // noteId
-//     let [note, setNote] = useState(null)
-    
-//     useEffect(()=>{
-//         getNote()
-//     }, [id])
-
-//     let getNote = async ()=>{
-//         let response = await fetch(`api/notes/${id}/`)
-//         let data = await response.json()
-//         setNote(data)
-//     }
-
-
-//   return (
-//     <div>
-//         <p>{note?.body}</p>
-//     </div>
-//   )
-// }
-
-// export default NotePage
-
 import React, { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { ReactComponent as ArrowLeft} from '../assets/arrow-left.svg'
 
 const NotePage = () => {
   let {id} = useParams(); // noteId
   let [note, setNote] = useState(null);
 
+  
+  let updateNote = async () => {
+    fetch(`/api/notes/${id}/update/`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(note)
+    })
+  }
+  
+  let handleSubmit = ()=> {
+    updateNote()
+  }
+  
   useEffect(() => {
     const getNote = async () => {
       let response = await fetch(`/api/notes/${id}`);
       let data = await response.json();
       setNote(data);
     };
-
     getNote();
   }, [id]);
 
@@ -47,12 +34,12 @@ const NotePage = () => {
     <div className='note'>
       <div className="note-header">
         <h3>
-          <Link to='/'>
-            < ArrowLeft />
+          <Link to={'/'}>
+            < ArrowLeft onClick={handleSubmit()}/>
           </Link>
         </h3>
       </div>
-      <textarea defaultValue={note?.body}></textarea>
+      <textarea onChange={(e) =>{setNote({...note, 'body':e.target.value })}} defaultValue={note?.body}></textarea>
     </div>
   );
 };
