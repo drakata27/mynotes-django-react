@@ -4,7 +4,7 @@ import NotePage from './pages/NotePage';
 import NotesListPage from './pages/NotesListPage';
 
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Route,
   Routes
 } from "react-router-dom";
